@@ -331,7 +331,7 @@ void MainWindow::loadSettings()
 
 void MainWindow::showPreferences()
 {
-    PreferencesDialog *preferences = new PreferencesDialog(this);
+    PreferencesDialog *preferences = new PreferencesDialog(this, SETTINGS_FILE_NAME);
     connect(preferences, &PreferencesDialog::accepted, m_model,
         &ChannelTableModel::setBufferSize);
     connect(preferences, &PreferencesDialog::accepted, this,
