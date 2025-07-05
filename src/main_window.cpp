@@ -45,8 +45,10 @@
 #include <iostream>
 #include <sstream>
 
+#define SETTINGS_FILE_NAME QString("gnss_sdr_monitor_settings.conf")
+
 MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent), ui(new Ui::MainWindow)
+    : QMainWindow(parent), ui(new Ui::MainWindow), m_settings(SETTINGS_FILE_NAME, QSettings::NativeFormat)
 {
     // Use a timer to delay updating the model to a fixed amount of times per
     // second.
@@ -61,7 +63,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     // Telecommand widget.
     m_telecommandDockWidget = new QDockWidget("Telecommand", this);
-    m_telecommandWidget = new TelecommandWidget(m_telecommandDockWidget);
+    m_telecommandWidget = new TelecommandWidget(m_telecommandDockWidget, SETTINGS_FILE_NAME);
     m_telecommandDockWidget->setWidget(m_telecommandWidget);
     addDockWidget(Qt::TopDockWidgetArea, m_telecommandDockWidget);
     connect(m_telecommandWidget, &TelecommandWidget::resetClicked, this, &MainWindow::clearEntries);
@@ -121,7 +123,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(m_closePlotsAction, &QAction::triggered, this, &MainWindow::closePlots);
 
     // Model.
-    m_model = new ChannelTableModel();
+    m_model = new ChannelTableModel(SETTINGS_FILE_NAME);
 
     // QTableView.
     // Tie the model to the view.
@@ -339,11 +341,10 @@ void MainWindow::showPreferences()
 
 void MainWindow::setPort()
 {
-    QSettings settings;
-    settings.beginGroup("Preferences_Dialog");
-    m_portGnssSynchro = settings.value("port_gnss_synchro", 1111).toInt();
-    m_portMonitorPvt = settings.value("port_monitor_pvt", 1112).toInt();
-    settings.endGroup();
+    m_settings.beginGroup("Preferences_Dialog");
+    m_portGnssSynchro = m_settings.value("port_gnss_synchro", 1112).toInt();
+    m_portMonitorPvt = m_settings.value("port_monitor_pvt", 1111).toInt();
+    m_settings.endGroup();
 
     m_socketGnssSynchro->disconnectFromHost();
     m_socketGnssSynchro->bind(QHostAddress::Any, m_portGnssSynchro);

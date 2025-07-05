@@ -34,6 +34,7 @@
 #define GNSS_SDR_MONITOR_PREFERENCES_DIALOG_H_
 
 #include <QDialog>
+#include <QSettings>
 
 namespace Ui
 {
@@ -45,14 +46,16 @@ class PreferencesDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit PreferencesDialog(QWidget *parent = nullptr);
+    explicit PreferencesDialog(QWidget *parent = nullptr, QString settingsFileName = QString(""));
     ~PreferencesDialog();
 
 private:
     Ui::PreferencesDialog *ui;
+    QSettings m_settings;
 
 private slots:
     void onAccept();
+    
 };
 
 #endif  // GNSS_SDR_MONITOR_PREFERENCES_DIALOG_H_

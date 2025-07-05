@@ -35,7 +35,8 @@
 #include "ui_telecommand_widget.h"
 #include <QScrollBar>
 
-TelecommandWidget::TelecommandWidget(QWidget *parent) : QWidget(parent),
+TelecommandWidget::TelecommandWidget(QWidget *parent, QString settingsFileName) : QWidget(parent), 
+                                                        m_settings(settingsFileName, QSettings::NativeFormat),
                                                         ui(new Ui::TelecommandWidget)
 {
     ui->setupUi(this);
@@ -94,10 +95,9 @@ TelecommandWidget::~TelecommandWidget()
 {
     m_telnetManager.disconnectTcp();
 
-    QSettings settings;
-    settings.beginGroup("TelecommandWidget");
-    settings.setValue("geometry", saveGeometry());
-    settings.endGroup();
+    m_settings.beginGroup("TelecommandWidget");
+    m_settings.setValue("geometry", saveGeometry());
+    m_settings.endGroup();
 
     delete ui;
 }
@@ -222,11 +222,10 @@ void TelecommandWidget::reconnect()
 void TelecommandWidget::statusConnected()
 {
     // The connection was successful so let's save the address and port number.
-    QSettings settings;
-    settings.beginGroup("tcp_socket");
-    settings.setValue("address", m_telnetManager.getAddress().toString());
-    settings.setValue("port", m_telnetManager.getPort());
-    settings.endGroup();
+    m_settings.beginGroup("tcp_socket");
+    m_settings.setValue("address", m_telnetManager.getAddress().toString());
+    m_settings.setValue("port", m_telnetManager.getPort());
+    m_settings.endGroup();
 
     qDebug() << "Settings Saved";
 

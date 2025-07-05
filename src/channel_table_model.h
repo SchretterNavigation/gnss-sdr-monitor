@@ -37,11 +37,12 @@
 #include "gnss_synchro.pb.h"
 #include <boost/circular_buffer.hpp>
 #include <QAbstractTableModel>
+#include <QSettings>
 
 class ChannelTableModel : public QAbstractTableModel
 {
 public:
-    ChannelTableModel();
+    ChannelTableModel(QString settingsFileName);
 
     void update();
 
@@ -80,6 +81,7 @@ protected:
 
 private:
     std::map<std::string, QString> m_mapSignalPrettyName;
+    QSettings m_settings;
 };
 
 #endif  // GNSS_SDR_MONITOR_CHANNEL_TABLE_MODEL_H_

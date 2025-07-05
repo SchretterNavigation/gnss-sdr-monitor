@@ -42,7 +42,7 @@
 /*!
  Constructs an instance of a table model.
  */
-ChannelTableModel::ChannelTableModel()
+ChannelTableModel::ChannelTableModel(QString settingsFileName) : m_settings(settingsFileName, QSettings::NativeFormat)
 {
     m_mapSignalPrettyName["1C"] = "L1 C/A";
     m_mapSignalPrettyName["1B"] = "E1";
@@ -459,10 +459,9 @@ int ChannelTableModel::getColumns()
  */
 void ChannelTableModel::setBufferSize()
 {
-    QSettings settings;
-    settings.beginGroup("Preferences_Dialog");
-    int size = settings.value("buffer_size", DEFAULT_BUFFER_SIZE).toInt();
-    settings.endGroup();
+    m_settings.beginGroup("Preferences_Dialog");
+    int size = m_settings.value("buffer_size", DEFAULT_BUFFER_SIZE).toInt();
+    m_settings.endGroup();
 
     m_bufferSize = size;
     clearChannels();

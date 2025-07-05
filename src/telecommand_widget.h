@@ -40,6 +40,7 @@
 #include <QTcpSocket>
 #include <QTimer>
 #include <QWidget>
+#include <string>
 
 namespace Ui
 {
@@ -51,7 +52,7 @@ class TelecommandWidget : public QWidget
     Q_OBJECT
 
 public:
-    explicit TelecommandWidget(QWidget *parent = nullptr);
+    explicit TelecommandWidget(QWidget *parent = nullptr,QString settingsFileName = QString(""));
     ~TelecommandWidget();
 
 signals:
